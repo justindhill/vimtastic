@@ -10,5 +10,4 @@
 1. Clone the repo
 > `git clone asdf`
 
-2. Open Vimtastic.safariextz 
-
+2. Open Vimtastic.safariextension 
