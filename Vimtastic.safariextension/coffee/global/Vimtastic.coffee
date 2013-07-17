@@ -5,15 +5,32 @@
 class Vimtastic
 	constructor: ->
 		@browser = new BrowserManipulation
-		safari.application.addEventListener "message", message, no
-		safari.application.addEventListener "activate", activate, no
+		@activeTab = @browser.activeTab().tab
+		safari.application.addEventListener "message", @routeMessage, yes
+		safari.application.addEventListener "activate", @activate, yes
+		safari.application.addEventListener "deactivate", @deactivate, yes
+		window.onkeydown += (e) ->
+			console.log e.keyCode
 	
-	message: ->
-		tabs = safari.application.activeBrowserWindow.tabs
+	activate: (e) ->
+		console.log "activating"
+		console.log typeof(e.target)
+		e.target.page.dispatchMessage "setActive", yes
+	
+	deactivate: (e) ->
+		console.log "deactivating"
+		console.log e.target
+		e.target.page.dispatchMessage "setActive", no
 
-		for i in [0..tabs.length - 1]
-			safari.application.activeBrowserWindow.tabs[i].page.dispatchMessage 'setActive', no
-
-	activate: ->
+	routeMessage: (e) =>
+		console.log "hello!"
+		console.log e
+		if e.target is @activeTab
+			switch e.name
+				when "changeTab"
+					@browser.changeTab(e.message)
+	
+		else
+			console.log "invalid target"
 
 window.vimtastic = new Vimtastic

@@ -2,28 +2,28 @@
 # Author: Justin Hill
 # Date: 7/16/13
 
-class BrowserManipulation
+class window.BrowserManipulation
 
-	activeTabInfo: ->
-		activeTab: safari.application.activeBrowserWindow.activeTab
-		activeTabIndex: safari.application.activeBrowserWindow.tabs.indexOf(
+	activeTab: ->
+		tab: safari.application.activeBrowserWindow.activeTab
+		index: safari.application.activeBrowserWindow.tabs.indexOf(
 			safari.application.activeBrowserWindow.activeTab
 		)
 
 	changeTab: (direction) ->
-		t = @activeTabInfo()
+		t = @activeTab()
 		tabs = safari.application.activeBrowserWindow.tabs
 
 		if direction is "left"
-			if t.activeTabIndex is 0
+			if t.index is 0
 				tabs[tabs.length - 1].activate()
 			else
-				tabs[t.activeTabIndex - 1].activate()
+				tabs[t.index - 1].activate()
 
 		else if direction is "right"
-			if t.activeTabIndex is tabs.length - 1
-				t[0].activate()
+			if t.index is tabs.length - 1
+				tabs[0].activate()
 			else
-				tabs[t.activeTabIndex + 1].activate()
+				tabs[t.index + 1].activate()
 		
 	
