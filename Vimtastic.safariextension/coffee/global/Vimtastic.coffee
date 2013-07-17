@@ -14,18 +14,18 @@ class Vimtastic
 	
 	activate: (e) ->
 		console.log "activating"
-		console.log typeof(e.target)
+		console.log e.target
 		e.target.page.dispatchMessage "setActive", yes
 	
 	deactivate: (e) ->
-		console.log "deactivating"
-		console.log e.target
+		console.log "activating"
 		e.target.page.dispatchMessage "setActive", no
 
 	routeMessage: (e) =>
 		console.log "hello!"
 		console.log e
-		if e.target is @activeTab
+		console.log @activeTab
+		if e.target is e.target.browserWindow.activeTab
 			switch e.name
 				when "changeTab"
 					@browser.changeTab(e.message)

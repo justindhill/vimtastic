@@ -4,7 +4,6 @@ class VimtasticInjector
 	constructor: ->
 		console.log "Vimtastic!"
 
-		document.addEventListener "keydown", @keyDispatch, no
 		safari.self.addEventListener "message", @globalDispatch, no
 
 		@mode = "normal"
@@ -16,7 +15,14 @@ class VimtasticInjector
 
 	setActive: (isActive) ->
 		console.log isActive
+		if isActive
+			console.log "registering..."
+			document.addEventListener "keydown", @keyDispatch, no
+		else
+			console.log "de-registering..."
+			document.removeEventListener "keydown", @keyDispatch, no
 		@active = isActive
+
 
 	keyDispatch: (e) =>
 		console.log e
@@ -32,6 +38,10 @@ class VimtasticInjector
 		if e.keyCode is 74
 			console.log "go left"
 			safari.self.tab.dispatchMessage "changeTab", "left"
+
+		else if e.keyCode is 75
+			console.log "go right"
+			safari.self.tab.dispatchMessage "changeTab", "right"
 
 	insertKeystroke: (e) ->
 
