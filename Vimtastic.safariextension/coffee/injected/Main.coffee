@@ -15,12 +15,23 @@ class VimtasticInjector
 			when "setActive" then @setActive(e.message)
 
 	setActive: (isActive) ->
+
+	
+		inputs = document.getElementsByTagName "input"
 		if isActive
 			console.log "Vimtastic: registering..."
-			document.addEventListener "keypress", @keyDispatch, no
+			document.addEventListener "keydown", @keyDispatch, no
+			for input in inputs
+				input.addEventListener "focus", @focus
+				input.addEventListener "blur", @blur
+
 		else
 			console.log "Vimtastic: de-registering..."
-			document.removeEventListener "keypress", @keyDispatch, no
+			document.removeEventListener "keydown", @keyDispatch, no
+			for input in inputs
+				input.removeEventListener "focus", @focus
+				input.removeEventListener "blur", @blur
+
 		@active = isActive
 
 
@@ -34,40 +45,52 @@ class VimtasticInjector
 		return no
 
 	normalKeystroke: (e) ->
-		switch e.keyCode
-			# J
-			when 74
-				e.preventDefault()
-				safari.self.tab.dispatchMessage "changeTab", "left"
+		# J
+		if e.keyCode is 74 and e.shiftKey
+			e.preventDefault()
+			safari.self.tab.dispatchMessage "changeTab", "left"
 
-			# K
-			when 75
-				e.preventDefault()
-				safari.self.tab.dispatchMessage "changeTab", "right"
+		# K
+		else if e.keyCode is 75 and e.shiftKey
+			e.preventDefault()
+			safari.self.tab.dispatchMessage "changeTab", "right"
 
-			# j
-			when 106
-				e.preventDefault()
-				window.scrollBy 0, 60
+		# j
+		else if e.keyCode is 74
+			e.preventDefault()
+			window.scrollBy 0, 60
 
-			# k
-			when 107
-				e.preventDefault()
-				window.scrollBy 0, -60
+		# k
+		else if e.keyCode is 75
+			e.preventDefault()
+			window.scrollBy 0, -60
 
-			# d
-			when 100
-				e.preventDefault()
-				window.scrollBy 0, window.innerHeight
+		# d
+		else if e.keyCode is 68
+			e.preventDefault()
+			window.scrollBy 0, window.innerHeight
 
-			# b
-			when 98
-				e.preventDefault()
-				window.scrollBy 0, -window.innerHeight
+		# b
+		else if e.keyCode is 66
+			e.preventDefault()
+			window.scrollBy 0, -window.innerHeight
 
 	insertKeystroke: (e) ->
+		console.log e
+		if e.keyCode is 27
+			document.activeElement.blur()
+			e.preventDefault()
+		console.log e.keyCode
+	
+	# event callbacks
+	focus: =>
+		@mode = "insert"
+		console.log @mode
 
-	commandKeystroke: (e) ->
+	blur: =>
+		@mode = "normal"
+		console.log @mode
+commandKeystroke: (e) ->
 
 if window is window.top
 	window.vimtastic = new VimtasticInjector
