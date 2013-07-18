@@ -5,7 +5,7 @@ class LinkHints
 		container = document.createElement "div"
 		container.classList.add "vimtastic-container"
 
-		for link in links
-
 	match: ->
+		return
 	remove: ->
+		return

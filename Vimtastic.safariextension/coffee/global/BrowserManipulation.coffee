@@ -11,7 +11,6 @@ class window.BrowserManipulation
 		)
 
 	changeTab: (direction) ->
-		console.log "changeTab: #{direction}"
 		t = @activeTab()
 		tabs = safari.application.activeBrowserWindow.tabs
 

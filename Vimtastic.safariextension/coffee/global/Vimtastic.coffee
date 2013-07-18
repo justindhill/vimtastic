@@ -9,28 +9,20 @@ class Vimtastic
 		safari.application.addEventListener "message", @routeMessage, yes
 		safari.application.addEventListener "activate", @activate, yes
 		safari.application.addEventListener "deactivate", @deactivate, yes
-		window.onkeydown += (e) ->
-			console.log e.keyCode
 	
 	activate: (e) ->
-		console.log "activating"
-		console.log e.target
-		e.target.page.dispatchMessage "setActive", yes
+		if e.target.page?
+			e.target.page.dispatchMessage "setActive", yes
 	
 	deactivate: (e) ->
-		console.log "activating"
-		e.target.page.dispatchMessage "setActive", no
+		if e.target.page?
+			e.target.page.dispatchMessage "setActive", no
 
 	routeMessage: (e) =>
-		console.log "hello!"
-		console.log e
-		console.log @activeTab
-		if e.target is e.target.browserWindow.activeTab
-			switch e.name
-				when "changeTab"
-					@browser.changeTab(e.message)
-	
-		else
-			console.log "invalid target"
+		switch e.name
+			when "changeTab"
+				@browser.changeTab(e.message)
+			when "log"
+				console.log "log: #{e.message}"
 
 window.vimtastic = new Vimtastic
