@@ -33,25 +33,31 @@ class VimtasticInjector
 			when "setActive" then @setActive(e.message)
 
 	setActive: (isActive) ->
-		inputs = document.getElementsByTagName "input"
 		if isActive
+			# check for input element when tab is set active
+			if document.activeElement.tagName is "INPUT"
+				console.log "Vimtastic: active element is input tag, switching to insert mode"
+				@mode = "insert"
+
+			# register events
 			console.log "Vimtastic: registering..."
 			document.addEventListener "keypress", @keyDispatch, no
-			for input in inputs
-				input.addEventListener "focus", @focus
-				input.addEventListener "blur", @blur
+			document.body.addEventListener "focus", @focus, yes
+			document.body.addEventListener "blur", @blur, yes
 		else
+			# reset mode
+			@mode = "normal"
+
+			# unregister events
 			console.log "Vimtastic: de-registering..."
 			document.removeEventListener "keypress", @keyDispatch, no
-			for input in inputs
-				input.removeEventListener "focus", @focus
-				input.removeEventListener "blur", @blur
+			document.body.removeEventListener "focus", @focus, yes
+			document.body.removeEventListener "blur", @blur, yes
 
 		@active = isActive
 
 
 	keyDispatch: (e) =>
-		console.log e
 		if @active
 			if @mode is "normal" then @normalKeystroke(e)
 			else if @mode is "insert" then @insertKeystroke(e)
@@ -93,14 +99,12 @@ class VimtasticInjector
 		console.log "#{@buffer}"
 	
 	insertKeystroke: (e) ->
-		console.log e
 		if e.keyCode is 27
 			document.activeElement.blur()
 			e.preventDefault()
-		console.log e.keyCode
 	
 	# event callbacks
-	focus: =>
+	focus: (e) =>
 		@mode = "insert"
 		console.log @mode
 
