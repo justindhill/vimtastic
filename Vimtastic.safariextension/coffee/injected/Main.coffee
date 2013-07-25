@@ -8,6 +8,7 @@ class VimtasticInjector
 		@active = no
 		@buffer = ""
 		@window = new WindowManipulation
+		@linkHints = new LinkHints @window.openNewTab, @window.navigate
 
 		@normalMap = [
 			{ binding: /([0-9]*)j/, callback: @window.scrollDown }
@@ -23,6 +24,7 @@ class VimtasticInjector
 			{ binding: "r", callback: @window.refresh }
 			{ binding: /gg/, callback: @window.scrollTop }
 			{ binding: "G", callback: @window.scrollBottom }
+			{ binding: "f", callback: => @setMode("hints") }
 		]
 		safari.self.addEventListener "message", @globalDispatch, no
 		console.log "Vimtastic!"
@@ -36,7 +38,14 @@ class VimtasticInjector
 		console.log "Vimtastic: #{mode}"
 		switch mode
 			when "normal"
+				if @mode is "insert"
+					document.activeElement.blur()
+				else if @mode is "hints"
+					@linkHints.disable()
+
+			when "hints"
 				document.activeElement.blur()
+				@linkHints.enable()
 		@mode = mode
 
 	setActive: (isActive) ->

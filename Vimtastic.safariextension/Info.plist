@@ -28,9 +28,14 @@
 			<key>End</key>
 			<array>
 				<string>js/injected/WindowManipulation.js</string>
+				<string>js/injected/LinkHints.js</string>
 				<string>js/injected/Main.js</string>
 			</array>
 		</dict>
+		<key>Stylesheets</key>
+		<array>
+			<string>css/Vimtastic.css</string>
+		</array>
 	</dict>
 	<key>Description</key>
 	<string>A CoffeeScript port of Vimari that aims to extend and modularize.</string>
