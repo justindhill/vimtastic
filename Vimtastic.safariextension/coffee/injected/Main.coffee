@@ -32,29 +32,47 @@ class VimtasticInjector
 		switch e.name
 			when "setActive" then @setActive(e.message)
 
+	setMode: (mode) ->
+		console.log "Vimtastic: #{mode}"
+		switch mode
+			when "normal"
+				document.activeElement.blur()
+		@mode = mode
+
 	setActive: (isActive) ->
 		if isActive
 			# check for input element when tab is set active
 			if document.activeElement.tagName is "INPUT"
-				console.log "Vimtastic: active element is input tag, switching to insert mode"
-				@mode = "insert"
+				@setMode "insert"
 
 			# register events
 			console.log "Vimtastic: registering..."
 			document.addEventListener "keypress", @keyDispatch, no
+			document.addEventListener "keydown", @keydown, no
 			document.body.addEventListener "focus", @focus, yes
 			document.body.addEventListener "blur", @blur, yes
 		else
 			# reset mode
-			@mode = "normal"
+			@setMode "normal"
 
 			# unregister events
 			console.log "Vimtastic: de-registering..."
 			document.removeEventListener "keypress", @keyDispatch, no
+			document.removeEventListener "keydown", @keydown, no
 			document.body.removeEventListener "focus", @focus, yes
 			document.body.removeEventListener "blur", @blur, yes
 
 		@active = isActive
+
+	# keydown is used for keys that can't be grabbed with keypress, i.e. esc
+	keydown: (e) =>
+		switch e.keyCode
+			when 27
+				e.preventDefault()
+				e.stopPropagation()
+				@setMode "normal"
+
+
 
 
 	keyDispatch: (e) =>
@@ -99,18 +117,13 @@ class VimtasticInjector
 		console.log "#{@buffer}"
 	
 	insertKeystroke: (e) ->
-		if e.keyCode is 27
-			document.activeElement.blur()
-			e.preventDefault()
 	
 	# event callbacks
 	focus: (e) =>
-		@mode = "insert"
-		console.log @mode
+		@setMode "insert"
 
 	blur: =>
-		@mode = "normal"
-		console.log @mode
+		@setMode "normal"
 	commandKeystroke: (e) ->
 
 	prefixModifier: (e, suffix) ->
