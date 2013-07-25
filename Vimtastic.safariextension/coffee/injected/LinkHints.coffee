@@ -1,3 +1,10 @@
+# LinkHints.coffee
+# Author: Justin Hill
+# Date: 7/25/13
+#
+# Note:	Much of this code was adapted from the Safari plugin Vimari, who in turn took much of theirs
+#		from the Chrome plugin Vimium.
+
 class LinkHints
 	constructor: (@openNewTab = null, @navigate = null) ->
 		@el = null
@@ -14,6 +21,7 @@ class LinkHints
 	disable: ->
 		# remove link hints and stuff.
 		document.body.removeChild @el
+		@el = null
 
 	hintChars: "sadfjklewcmpgh"
 
@@ -43,8 +51,6 @@ class LinkHints
 		return
 
 	match: ->
-		return
-	remove: ->
 		return
 
 	visibleClickableElements: ->
@@ -124,10 +130,7 @@ class LinkHintMarker
 		rect = @target.getClientRects()[0]
 		@el.style.left = "#{rect.left}px"
 		@el.style.top = "#{rect.top}px"
-		#@target.innerHTML += @el.outerHTML
 
 		this
-
-
 
 window.LinkHints = LinkHints
