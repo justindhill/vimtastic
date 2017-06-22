@@ -4,7 +4,7 @@
 
 ---
 
-###How do I use Vimtastic?
+### How do I use Vimtastic?
 
 Currently, Vimtastic only supports "normal" mode usage.  The feature list will grow as time goes on, but here's what you can expect right now.
 
@@ -29,7 +29,7 @@ Currently, Vimtastic only supports "normal" mode usage.  The feature list will g
 * `L` - forward
 * `r` - refresh
 
-###Installation
+### Installation
 
 
 1. Clone the repo
